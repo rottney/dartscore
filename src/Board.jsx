@@ -21,11 +21,12 @@ class Board extends React.Component {
     const history = this.state.history;
     const current = history[history.length - 1];
     const numPlayers = this.state.numPlayers;
+    const playerNames = this.state.playerNames;
     let squares = current.squares.slice();
     let scores = current.scores.slice();
     let closedAll = current.closedAll.slice();
 
-    if (declareWinner(closedAll, scores, numPlayers) === "") {
+    if (declareWinner(closedAll, scores, numPlayers, playerNames) === "") {
       if (squares[i] === null) {
         squares[i] = "/";
       }
@@ -91,7 +92,7 @@ class Board extends React.Component {
   }
 
   renderSquare(i) {
-    const history = this.state.history;  // think i need 2 lift this up...
+    const history = this.state.history;  // lift this up?
     const current = history[history.length - 1];
     const squares = current.squares;
 
@@ -105,17 +106,13 @@ class Board extends React.Component {
 
   render() {
     const numPlayers = this.state.numPlayers;
-    const history = this.state.history;  // think i need 2 lift this up...
+    const playerNames = this.state.playerNames;
+    const history = this.state.history;  // lift this up?
     const current = history[history.length - 1];
     const myScores = current.scores;
     const closedAll = current.closedAll;
 
     // Generate team names
-    /*let teamNames = [];
-    for (let i = 1; i <= numPlayers; i++) {
-      teamNames.push(<div className="score">Player {i}</div>);
-    }*/
-
     let teamNames = [];
     for (let i = 0; i < numPlayers; i++) {
       teamNames.push(<div className="score">{this.state.playerNames[i]}</div>);
@@ -151,7 +148,7 @@ class Board extends React.Component {
     // Determine winner
     const winner = (
       <div className="status">
-        {declareWinner(closedAll, myScores, numPlayers)}
+        {declareWinner(closedAll, myScores, numPlayers, playerNames)}
       </div>
     );
 
@@ -226,27 +223,29 @@ function getScoresCutthroat(scores, squares, i, numPlayers) {
 }
 
 
-function declareWinner(closedAll, scores, numPlayers) {
+function declareWinner(closedAll, scores, numPlayers, playerNames) {
   if (numPlayers === 2) {
-    return getWinnerRegular(closedAll, scores);
+    return getWinnerRegular(closedAll, scores, playerNames);
   }
 
-  return getWinnerCutthroat(closedAll, scores, numPlayers);
+  return getWinnerCutthroat(closedAll, scores, numPlayers, playerNames);
 }
 
-function getWinnerRegular(closedAll, scores) {
+function getWinnerRegular(closedAll, scores, playerNames) {
   if (closedAll[0] && scores[0] >= scores[1]) {
-    return "Player 1 wins.";
+    const winner = playerNames[0];
+    return winner.toString() + " wins.";
   }
 
   if (closedAll[1] && scores[1] >= scores[0]) {
-    return "Player 2 wins.";
+    const winner = playerNames[1];
+    return winner.toString() + " wins.";
   }
 
   return "";
 }
 
-function getWinnerCutthroat(closedAll, scores, numPlayers) {
+function getWinnerCutthroat(closedAll, scores, numPlayers, playerNames) {
   for (let i = 0; i < numPlayers; i++) {
     if (closedAll[i]) {
       let iWon = true;
@@ -259,7 +258,8 @@ function getWinnerCutthroat(closedAll, scores, numPlayers) {
         }
       }
       if (iWon) {
-        return "Player " + (i + 1).toString() + " wins.";
+        const winner = playerNames[i];
+        return winner.toString() + " wins.";
       }
     }
   }
