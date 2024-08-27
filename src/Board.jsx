@@ -116,8 +116,6 @@ class Board extends React.Component {
       teamNames.push(<div className="score">Player {i}</div>);
     }*/
 
-    console.log("AHHHH");
-    console.log(this.state.playerNames);
     let teamNames = [];
     for (let i = 0; i < numPlayers; i++) {
       teamNames.push(<div className="score">{this.state.playerNames[i]}</div>);

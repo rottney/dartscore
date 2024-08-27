@@ -6,7 +6,6 @@ import './index.css';
 class Game extends React.Component {
   constructor() {
     super();
-    console.log("YUPP!");
     this.state = ({
       numPlayers: 0,
       playerNames: Array(),
@@ -18,12 +17,12 @@ class Game extends React.Component {
 
     const form = e.target;
     const formData = new FormData(form);
-    
     const playerName = formData.get("name");
-    console.log("in 'namePlayers'");
-    console.log(this.state.playerNames);
-    this.setState({playerNames: this.state.playerNames.push(playerName)});
-    console.log(this.state.playerNames);
+
+    let playerNames = this.state.playerNames;
+    playerNames.push(playerName);
+
+    this.setState({playerNames: playerNames});
   }
 
   handleClick(i) {
@@ -31,13 +30,10 @@ class Game extends React.Component {
   }
 
   render() {
-    console.log("DAMN!!!!!!!!");
     let numPlayers = this.state.numPlayers;
     let playerNames = this.state.playerNames;
-    console.log(numPlayers);
-    console.log(playerNames);
 
-    if (numPlayers == 0) {
+    if (numPlayers === 0) {
       return (
          <div class="dropdown">
           <button class="dropbtn"># Players:</button>
@@ -50,7 +46,7 @@ class Game extends React.Component {
       );
     }
 
-    if (playerNames.length < numPlayers) { // if?
+    while (playerNames.length < numPlayers) { // if?
       return (
         <div>
           <p>Player {numPlayers - (numPlayers - playerNames.length) + 1} enter name:</p>
@@ -70,10 +66,6 @@ class Game extends React.Component {
             playerNames={playerNames}
           />
         </div>
-        {/*<div className="game-info">
-          <div>{}</div>
-          <ol>{}</ol>
-        </div>*/}
       </div>
     );
   }
