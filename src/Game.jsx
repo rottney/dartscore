@@ -9,20 +9,23 @@ class Game extends React.Component {
     this.state = ({
       numPlayers: 0,
       playerNames: Array(),
+      currentName: 'Name',
     });
   }
 
   namePlayers(e) {
     e.preventDefault();
 
-    const form = e.target;
-    const formData = new FormData(form);
-    const playerName = formData.get("name");
+    const playerName = this.state.currentName;
 
     let playerNames = this.state.playerNames;
     playerNames.push(playerName);
 
-    this.setState({playerNames: playerNames});
+    this.setState({playerNames: playerNames, currentName: 'Name'});
+  }
+
+  handleNameChange(e) {
+    this.setState({currentName: e.target.value});
   }
 
   handleClick(i) {
@@ -46,12 +49,16 @@ class Game extends React.Component {
       );
     }
 
-    while (playerNames.length < numPlayers) { // if?
+    if (playerNames.length < numPlayers) { 
       return (
         <div>
           <p>Player {numPlayers - (numPlayers - playerNames.length) + 1} enter name:</p>
           <form onSubmit={this.namePlayers.bind(this)}>
-            <input name="name" defaultValue="Name" />
+            <input 
+              name="name" 
+              value={this.state.currentName} 
+              onChange={this.handleNameChange.bind(this)} 
+            />
             <button type="submit">Save</button>
           </form>
         </div>
