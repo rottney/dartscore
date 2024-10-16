@@ -8,7 +8,7 @@ class Game extends React.Component {
     super();
     this.state = ({
       numPlayers: 0,
-      playerNames: Array(),
+      playerNames: [],
       currentName: 'Name',
     });
   }
@@ -18,7 +18,7 @@ class Game extends React.Component {
 
     const playerName = this.state.currentName;
 
-    let playerNames = this.state.playerNames;
+    const playerNames = this.state.playerNames;
     playerNames.push(playerName);
 
     this.setState({playerNames: playerNames, currentName: 'Name'});
@@ -33,8 +33,8 @@ class Game extends React.Component {
   }
 
   render() {
-    let numPlayers = this.state.numPlayers;
-    let playerNames = this.state.playerNames;
+    const numPlayers = this.state.numPlayers;
+    const playerNames = this.state.playerNames;
 
     if (numPlayers === 0) {
       return (
