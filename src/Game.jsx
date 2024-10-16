@@ -13,7 +13,7 @@ class Game extends React.Component {
     });
   }
 
-  namePlayers(e) {
+  namePlayers = (e) => {
     e.preventDefault();
 
     const playerName = this.state.currentName;
@@ -24,7 +24,7 @@ class Game extends React.Component {
     this.setState({playerNames: playerNames, currentName: 'Name'});
   }
 
-  handleNameChange(e) {
+  handleNameChange = (e) => {
     this.setState({currentName: e.target.value});
   }
 
@@ -53,11 +53,11 @@ class Game extends React.Component {
       return (
         <div>
           <p>Player {numPlayers - (numPlayers - playerNames.length) + 1} enter name:</p>
-          <form onSubmit={this.namePlayers.bind(this)}>
+          <form onSubmit={this.namePlayers}>
             <input 
               name="name" 
               value={this.state.currentName} 
-              onChange={this.handleNameChange.bind(this)} 
+              onChange={this.handleNameChange} 
             />
             <button type="submit">Save</button>
           </form>
