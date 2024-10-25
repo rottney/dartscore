@@ -3,7 +3,7 @@ import Square from './Square.jsx';
 import './index.css';
 
 
-class Board extends React.Component {
+class CricketBoard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -168,7 +168,7 @@ class Board extends React.Component {
   }
 }
 
-export default Board;
+export default CricketBoard;
 
 // ========================================
 

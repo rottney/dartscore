@@ -1,5 +1,6 @@
 import React from 'react';
-import Board from './Board.jsx';  
+import CricketBoard from './CricketBoard.jsx';
+import ThreeOhOneBoard from './ThreeOhOneBoard.jsx';
 import './index.css';
 
 
@@ -9,7 +10,8 @@ class Game extends React.Component {
     this.state = ({
       numPlayers: 0,
       playerNames: [],
-      currentName: 'Name',
+      currentName: "",
+      gameType: "",
     });
   }
 
@@ -21,7 +23,7 @@ class Game extends React.Component {
     const playerNames = this.state.playerNames;
     playerNames.push(playerName);
 
-    this.setState({playerNames: playerNames, currentName: 'Name'});
+    this.setState({playerNames: playerNames, currentName: ""});
   }
 
   handleNameChange = (e) => {
@@ -30,6 +32,10 @@ class Game extends React.Component {
 
   handleClick(i) {
     this.setState({numPlayers: i});
+  }
+  
+  setGameType(type) {
+    this.setState({gameType: type});
   }
 
   render() {
@@ -65,16 +71,44 @@ class Game extends React.Component {
       );
     }
 
-    return (
-      <div className="game">
-        <div className="game-board">
-          <Board 
-            numPlayers={numPlayers}
-            playerNames={playerNames}
-          />
+    const gameType = this.state.gameType;
+    if (gameType === "") {
+      return (
+        <div class="dropdown">
+          <button class="dropbtn">Game Type:</button>
+          <div class="dropdown-content">
+            <a onClick={() => this.setGameType("cricket")}>Cricket</a>
+            <a onClick={() => this.setGameType("301")}>301</a>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+
+    else if (gameType === "cricket") {
+      return (
+        <div className="game">
+          <div className="game-board">
+            <CricketBoard
+              numPlayers={numPlayers}
+              playerNames={playerNames}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    else {
+      return (
+        <div className="game">
+          <div className="game-board">
+            <ThreeOhOneBoard
+              numPlayers={numPlayers}
+              playerNames={playerNames}
+            />
+          </div>
+        </div>
+      );
+    }
   }
 }
 
