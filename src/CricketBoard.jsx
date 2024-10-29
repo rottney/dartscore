@@ -79,7 +79,7 @@ class CricketBoard extends React.Component {
     let newGame = window.confirm("Are you sure you want to start a new game?  "
       + "Your progress will not be saved.");
     if (newGame) {
-      window.location.reload()
+      window.location.reload();
     }
   }
 
@@ -142,15 +142,15 @@ class CricketBoard extends React.Component {
       scores.push(<div className="score">{myScores[i]}</div>)
     }
 
-    // Undo button
-    const undoButton = this.renderUndoButton();
-
     // Determine winner
     const winner = (
       <div className="status">
         {declareWinner(closedAll, myScores, numPlayers, playerNames)}
       </div>
     );
+    
+    // Undo button
+    const undoButton = this.renderUndoButton();
 
     // New game button
     const newGameButton = this.renderNewGameButton();
@@ -180,7 +180,6 @@ function getScores(scores, squares, i, numPlayers) {
   return getScoresCutthroat(scores, squares, i, numPlayers);
 }
 
-
 function getScoresRegular(scores, squares, i) {
   if (i % 2 === 0 && squares[i + 1] !== "Ⓧ") {
     if (i === 12) {
@@ -203,7 +202,6 @@ function getScoresRegular(scores, squares, i) {
   return scores;
 }
 
-
 function getScoresCutthroat(scores, squares, i, numPlayers) {
   let column = i % numPlayers;
   let start = 0 - column;
@@ -221,7 +219,6 @@ function getScoresCutthroat(scores, squares, i, numPlayers) {
 
   return scores;
 }
-
 
 function declareWinner(closedAll, scores, numPlayers, playerNames) {
   if (numPlayers === 2) {
@@ -266,7 +263,6 @@ function getWinnerCutthroat(closedAll, scores, numPlayers, playerNames) {
 
   return "";
 }
-
 
 function didCloseAll(squares, i, numPlayers) {
   for (let j = i % numPlayers; j < 7*numPlayers; j+= numPlayers) {

@@ -41,6 +41,19 @@ ol, ul {
   width: 120px;
 }
 
+.column{
+  display: inline-block;
+  width: 120px;
+}
+
+.bust{
+  color: red;
+}
+
+.win{
+  color: gold;
+}
+
 .square:focus {
   outline: none;
 }

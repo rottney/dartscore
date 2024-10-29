@@ -61,7 +61,6 @@ class Game extends React.Component {
           <p>Player {numPlayers - (numPlayers - playerNames.length) + 1} enter name:</p>
           <form onSubmit={this.namePlayers}>
             <input 
-              name="name" 
               value={this.state.currentName} 
               onChange={this.handleNameChange} 
             />
