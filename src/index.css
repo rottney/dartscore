@@ -106,3 +106,29 @@ ol, ul {
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {display: block;}
+
+/* For styling the footer */
+.wrapper {
+  width: 100%;
+  margin: 10px 0 20px 0;
+  box-sizing: border-box;
+  padding: 10px;
+  color:black;
+  text-align: center;
+}
+
+#box p {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  line-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#box img {
+  height: 24px;
+  vertical-align: middle;
+}
