@@ -1,6 +1,7 @@
 import React from 'react';
 import './index.css';
 
+
 class ThreeOhOneBoard extends React.Component {
   constructor(props) {
     super(props);
@@ -155,8 +156,6 @@ class ThreeOhOneBoard extends React.Component {
     const playerNames = this.state.playerNames;
     const history = this.state.history;
     const current = history[history.length - 1];
-    const turnScores = current.turnScores;
-    const displayScores = current.displayScores;
     const finalScores = current.finalScores;
 
     let teamNames = [];
