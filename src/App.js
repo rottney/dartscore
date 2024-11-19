@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+//import logo from './logo.svg';
+//import './App.css';
+
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate,
+} from "react-router-dom";
+import Game from "./Game.jsx";
+import CricketBoard from "./CricketBoard.jsx";
+import ThreeOhOneBoard from "./ThreeOhOneBoard";
+
+import "./index.css"
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    ///*
+    return (
+        <Router>
+            <Routes>
+                <Route 
+                    path="/" 
+                    element={<Game/>}
+                />
+                <Route 
+                    path="/cricket/:id"
+                    element={<CricketBoard/>}
+                />
+                <Route 
+                    path="/301/:id"
+                    element={<ThreeOhOneBoard/>}
+                />
+            </Routes>
+        </Router>
+    );
+    //*/
+
+    /*
+    return (
+        <Game/>
+    )
+    */
 }
 
 export default App;

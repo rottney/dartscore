@@ -1,8 +1,10 @@
-import ReactDOM from 'react-dom';
-import Game from './Game.jsx';
+import ReactDOM from "react-dom/client";
+import App from "./App.js";
+//import Session from "./Session.jsx";
+//import Game from "./Game.jsx";
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <Game />
+  <App />
 );

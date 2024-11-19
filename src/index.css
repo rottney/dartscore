@@ -8,11 +8,24 @@ ol, ul {
   padding-left: 30px;
 }
 
-.board-row:after {
+
+.game {
+  display: flex;
+  flex-direction: row;
+}
+
+
+.board-row/*:after*/ {
   clear: both;
   content: "";
   display: table;
 }
+
+/*
+.board-row {
+  display: flex;
+  width: 100%;
+}*/
 
 .status {
   margin-bottom: 10px;
@@ -33,7 +46,7 @@ ol, ul {
   width: 120px;
 }
 
-.score{
+.score {
   display: inline-block;
   font-size: 18px;
   margin-bottom: 10px;
@@ -41,16 +54,17 @@ ol, ul {
   width: 120px;
 }
 
-.column{
+.column {
   display: inline-block;
   width: 120px;
 }
 
-.bust{
+
+.bust {
   color: red;
 }
 
-.win{
+.win {
   color: gold;
 }
 
@@ -62,10 +76,6 @@ ol, ul {
   background: #ddd;
 }
 
-.game {
-  display: flex;
-  flex-direction: row;
-}
 
 /* Dropdown Button */
 .dropbtn {
@@ -107,6 +117,7 @@ ol, ul {
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {display: block;}
 
+
 /* For styling the footer */
 .wrapper {
   width: 100%;
@@ -132,3 +143,17 @@ ol, ul {
   height: 24px;
   vertical-align: middle;
 }
+
+/*
+.row-tag {
+  min-width: 40px;
+}
+*/
+
+/*
+@media (max-width: 541px) {
+  .square, .score, .column {
+    width: 25%;
+  }
+}
+*/
