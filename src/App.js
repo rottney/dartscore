@@ -23,10 +23,17 @@ function App() {
                     path="/" 
                     element={<Game/>}
                 />
-                <Route 
+                {/*<Route 
                     path="/cricket/:id"
                     element={<CricketBoard/>}
-                />
+                />*/}
+                <Route path="cricket">
+                    <Route
+                        path=":id"
+                        element={<CricketBoard/>}
+                    />
+                </Route>
+
                 <Route 
                     path="/301/:id"
                     element={<ThreeOhOneBoard/>}

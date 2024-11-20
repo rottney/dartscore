@@ -6,7 +6,30 @@ import { useParams } from "react-router-dom";
 import io from "socket.io-client";
 
 
-export default function CricketBoard({ numPlayers, playerNames }) {
+async function getState(gameId) {
+    const url = `http://localhost:5000/cricket/${gameId}`;
+
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+        console.log(data);
+    }
+    catch(e) {
+        console.error(e);
+    }
+}
+
+
+//export default function CricketBoard({ numPlayers, playerNames }) {
+export default function CricketBoard() {
+    const { gameId } = useParams();
+    console.log(gameId);
+
+    getState(gameId);
+
+    // HARD CODED FOR TEST
+    let numPlayers = 2;
+    let playerNames = ["Ryan", "Tessy"];
     // will need to change this to read from backend
     const [history, setHistory] = useState(
         [
