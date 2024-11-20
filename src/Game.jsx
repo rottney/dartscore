@@ -4,6 +4,7 @@ import ThreeOhOneBoard from './ThreeOhOneBoard.jsx';
 import './index.css';
 
 import { Link } from "react-router-dom";
+import Session from './Session.jsx';
 
 
 class Game extends React.Component {
@@ -14,7 +15,7 @@ class Game extends React.Component {
       playerNames: [],
       currentName: "",
       gameType: "",
-      sessionId: "",
+      //sessionId: this.props.sessionId,
     });
   }
 
@@ -41,10 +42,12 @@ class Game extends React.Component {
     this.setState({gameType: type});
   }
 
+  /*
   generateSessionId() {
     const sessionId = crypto.randomUUID();
     this.setState({sessionId: sessionId});
   }
+    */
 
   render() {
     const numPlayers = this.state.numPlayers;
@@ -91,6 +94,14 @@ class Game extends React.Component {
       );
     }
 
+    return(
+        <Session
+            gameType={gameType}
+            numPlayers={numPlayers}
+            playerNames={playerNames}
+        />
+    )
+
     /*
     const sessionId = this.state.sessionId;
     if (sessionId === "") {
@@ -102,8 +113,7 @@ class Game extends React.Component {
     }
     */
 
-    /*else */if (gameType === "cricket") {
-        ///*
+    /*else *//*if (gameType === "cricket") {
       return (
         <div className="game">
           <div className="game-board">
@@ -114,15 +124,12 @@ class Game extends React.Component {
           </div>
         </div>
       );
-      //*/
 
-      /*
-     return(
-        <div>
-            <Link to={`/cricket/${sessionId}`}>Go to unique page</Link>
-        </div>
-     );
-     */
+     //return(
+     //   <div>
+     //       <Link to={`/cricket/${sessionId}`}>Go to unique page</Link>
+     //   </div>
+     //);
     }
 
     else {
@@ -136,7 +143,7 @@ class Game extends React.Component {
           </div>
         </div>
       );
-    }
+    }*/
   }
 }
 
