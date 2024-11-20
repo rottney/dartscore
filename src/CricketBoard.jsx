@@ -6,64 +6,50 @@ import { useParams } from "react-router-dom";
 import io from "socket.io-client";
 
 
-async function getState(gameId) {
-    const url = `http://localhost:5000/cricket/${gameId}`;
+function getGameId() {
+    const baseUrl = "http://localhost:3000/cricket/";   // change to vercel url later?
+    const fullUrl = window.location.href;
 
-    try {
-        const res = await fetch(url);
-        const data = await res.json();
-        console.log(data);
-    }
-    catch(e) {
-        console.error(e);
-    }
+    return fullUrl.replace(baseUrl, "");
 }
 
 
-//export default function CricketBoard({ numPlayers, playerNames }) {
 export default function CricketBoard() {
-    const { gameId } = useParams();
-    console.log(gameId);
+    const gameId = getGameId();
 
-    getState(gameId);
+    const [history, setHistory] = useState([]);
+    const [numPlayers, setNumPlayers] = useState(0);
+    const [playerNames, setPlayerNames] = useState([]);
 
-    // HARD CODED FOR TEST
-    let numPlayers = 2;
-    let playerNames = ["Ryan", "Tessy"];
-    // will need to change this to read from backend
-    const [history, setHistory] = useState(
-        [
-            {
-                squares: Array(7 * numPlayers).fill(null),
-                scores: Array(numPlayers).fill(0),
-                closedAll: Array(numPlayers).fill(false),
-            }
-        ],
-    );
 
-    /*
-    const { gameId } = useParams(); //?
+    async function getStateFromServer(gameId) {
+        const url = `http://localhost:5000/cricket/${gameId}`;
+    
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            console.log(Date.now());
+            console.log(data);
+            
+            setHistory(history.concat(data["history"]));
+            setNumPlayers(data["num_players"]);
+            setPlayerNames(data["player_names"]);
+        }
+        catch(e) {
+            console.error(e);
+        }
+    }
 
-    useEffect(() => {
-        const socket = io("http://localhost:5000");
-
-        socket.emit("join_game", { game_id: gameId });
-
-        socket.on("game_state", (data) => {
-            setGameState(data);
-        });
-
-        return () => {
-            socket.disconnect();
-        };
-    }, [gameId]);
-    */
+    if (numPlayers === 0) {
+        getStateFromServer(gameId);
+    }
 
     function handleClick(i) {
         const current = history[history.length - 1];
         let squares = current.squares.slice();
         let scores = current.scores.slice();
-        let closedAll = current.closedAll.slice();
+        let closedAll = current.closed_all.slice();
+        console.log(closedAll);
 
         if (declareWinner(closedAll, scores, numPlayers, playerNames) === "") {
             if (squares[i] === null) {
@@ -86,7 +72,7 @@ export default function CricketBoard() {
             history.concat({
                 squares: squares,
                 scores: scores,
-                closedAll: closedAll,
+                closed_all: closedAll,
             })
         );
     }
@@ -139,9 +125,15 @@ export default function CricketBoard() {
     }
 
 
-    const current = history[history.length - 1];
-    const myScores = current.scores;
-    const closedAll = current.closedAll;
+    let current = [];
+    let myScores = [];
+    let closedAll = [];
+
+    if (history.length > 0) {
+        current = history[history.length - 1];
+        myScores = current.scores;
+        closedAll = current.closed_all;
+    }
 
     // Generate team names
     let teamNames = [];
