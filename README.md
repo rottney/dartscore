@@ -1,70 +1,29 @@
-# Getting Started with Create React App
+# Dartscore - Score a game of darts
+<img width="374" alt="dartscore_cricket" src="https://github.com/user-attachments/assets/f5420154-d45e-4685-afff-f115694cfd8c">
+<img width="412" alt="dartscore_301" src="https://github.com/user-attachments/assets/869f676a-e5e9-45cc-a670-3ab56647e416">
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Summary
+Dartscore is a simple darts scoring web app written in React. It can be used to score a game of [Cricket](https://www.dartslive.com/beginner/en/cricket/) or [301](https://www.dartslive.com/beginner/en/01/) darts for 2-4 players. It runs on any browser and is written with a mobile-first approach - very handy when the pub is out of chalk!
 
-## Available Scripts
+This project is one of two primary portfolio pieces I created at [The Recurse Center](https://www.recurse.com/) in Brooklyn during the Fall of 2024. The site is hosted using Vercel and can be accessed at [dartscore.vercel.app](https://dartscore.vercel.app/).
 
-In the project directory, you can run:
+## Features
+**Universal**
+* 2, 3, or 4 players
+* Undo last step - reverts game to the previous state, in case a turn was incorrectly entered
 
-### `yarn start`
+**Cricket mode**
+* **Point accumulation:** in 2-player mode, a player accumulates _points_ when they hit a number they have closed and their opponent hasn't. The first player to close each number (15 - 20 and Bull) and reach a point score greater than or equal to their opponent wins.
+* **Cutthroat points:** in 3- or 4-player mode, the point accumulation is reversed; after a player has closed a number, each subsequent hit on that number gives points to the opponents who have _not_ closed that number. The first player to close 15 - 20 and Bull with the _lowest_ (or equal to the lowest) score wins.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**301 mode**
+* **Point validation:** as the per-round points are entered into a text box, the application validates that the score is valid for a standard 3-dart round. For example, negative values, values greater than 180, and non-integer values are invalid. The application provides a specific error message when the score is out of bounds.
+* **Busts:** If a player _busts_, i.e. goes below 0 on their final score, the score for that round is marked, but the total score remains unchanged, and the busted score is rendered in red.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Future enhancement (in-progress)
+This application works great on a large shared screen (like a laptop), but the user experience is poor on mobile because whoever is keeping score must pass their phone to everyone playing, or mark everyone's score themself. To improve this experience, I am implementing a backend using Flask so that each game is assigned a unique session ID that can be shared between everyone playing that game (the ID will be appended to the application's root URL). The communication between the clients and server will be handled using WebSocket so that one player's changes will be rendered across all players' devices.
 
-### `yarn test`
+## Feedback?
+If you notice any issues while using the app, please feel free to open a bug report using the [Issues](https://github.com/rottney/dartscore/issues) tab and I will get it fixed as quickly as possible.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Contributions welcome! Please reach out at rottney123@gmail.com if interested and I will be happy to get you onboarded. 🙂
