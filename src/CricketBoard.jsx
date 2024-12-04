@@ -1,35 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { React, useState } from "react";
+import { io } from "socket.io-client";
 import Square from "./Square.jsx";
 import "./index.css";
 
-import { useParams } from "react-router-dom";
-import io from "socket.io-client";
-
-
-function getGameId() {
-    const baseUrl = "http://localhost:3000/cricket/";   // change to vercel url later?
-    const fullUrl = window.location.href;
-
-    return fullUrl.replace(baseUrl, "");
-}
-
 
 export default function CricketBoard() {
-    const gameId = getGameId();
-
-    const [history, setHistory] = useState([]);
-    const [numPlayers, setNumPlayers] = useState(0);
-    const [playerNames, setPlayerNames] = useState([]);
-
-
-    async function getStateFromServer(gameId) {
+    async function getInitialStateFromServer(gameId) {
         const url = `http://localhost:5000/cricket/${gameId}`;
     
         try {
             const res = await fetch(url);
             const data = await res.json();
-            console.log(Date.now());
-            console.log(data);
             
             setHistory(history.concat(data["history"]));
             setNumPlayers(data["num_players"]);
@@ -40,8 +21,53 @@ export default function CricketBoard() {
         }
     }
 
-    if (numPlayers === 0) {
-        getStateFromServer(gameId);
+    function setTeamNames(numPlayers, playerNames) {
+        let teamNames = [];
+
+        for (let i = 0; i < numPlayers; i++) {
+            teamNames.push(<div className="score">{playerNames[i]}</div>);
+        }
+
+        return teamNames;
+    }
+
+    function generateBoard(numPlayers) {
+        let board = [];
+
+        for (let i = 0; i < 7; i++) {
+            let row = [];
+    
+            for (let j = 0; j < numPlayers; j++) {
+                row.push(renderSquare(numPlayers*i + j));
+            }
+    
+            let rowTag = 20 - i;
+            if (rowTag === 14) {
+                rowTag = "B";
+            }
+    
+            board.push(<div className="board-row">{row} &emsp; {rowTag}</div>);
+        }
+
+        return board;
+    }
+
+    function generateScores(numPlayers) {
+        let scores = [];
+
+        for (let i = 0; i < numPlayers; i++) {
+            scores.push(<div className="score">{myScores[i]}</div>)
+        }
+
+        return scores;
+    }
+
+    function setWinner(closedAll, myScores, numPlayers, playerNames) {
+        return (
+            <div className="status">
+                {declareWinner(closedAll, myScores, numPlayers, playerNames)}
+            </div>
+        );
     }
 
     function handleClick(i) {
@@ -49,7 +75,6 @@ export default function CricketBoard() {
         let squares = current.squares.slice();
         let scores = current.scores.slice();
         let closedAll = current.closed_all.slice();
-        console.log(closedAll);
 
         if (declareWinner(closedAll, scores, numPlayers, playerNames) === "") {
             if (squares[i] === null) {
@@ -68,6 +93,8 @@ export default function CricketBoard() {
 
         closedAll[i % numPlayers] = didCloseAll(squares, i, numPlayers);
 
+        // first call backend
+
         setHistory(
             history.concat({
                 squares: squares,
@@ -78,6 +105,8 @@ export default function CricketBoard() {
     }
 
     function undo() {
+        // first call backend
+
         setHistory(
             history.slice(0, history.length - 1)
         );
@@ -125,6 +154,27 @@ export default function CricketBoard() {
     }
 
 
+    const gameId = getGameId();
+    const socket = io("http://localhost:5000");
+
+    socket.on("connect", () => {
+        console.log("connected to server");
+        socket.emit("my event", "Hello Server!");
+    });
+
+    socket.on("my response", (data) => {
+        console.log("Message from server", data);
+    });
+    
+
+    const [history, setHistory] = useState([]);
+    const [numPlayers, setNumPlayers] = useState(0);
+    const [playerNames, setPlayerNames] = useState([]);
+
+    if (numPlayers === 0) {
+        getInitialStateFromServer(gameId);
+    }
+
     let current = [];
     let myScores = [];
     let closedAll = [];
@@ -135,50 +185,14 @@ export default function CricketBoard() {
         closedAll = current.closed_all;
     }
 
-    // Generate team names
-    let teamNames = [];
-    for (let i = 0; i < numPlayers; i++) {
-        teamNames.push(<div className="score">{playerNames[i]}</div>);
-    }
-
-    // Generate board
-    let board = [];
-
-    for (let i = 0; i < 7; i++) {
-        let row = [];
-
-        for (let j = 0; j < numPlayers; j++) {
-            row.push(renderSquare(numPlayers*i + j));
-        }
-
-        let rowTag = 20 - i;
-        if (rowTag === 14) {
-            rowTag = "B";
-        }
-
-        board.push(<div className="board-row">{row} &emsp; {rowTag}</div>);
-    }
-
-    // Generate scores
-    let scores = [];
-    for (let i = 0; i < numPlayers; i++) {
-        scores.push(<div className="score">{myScores[i]}</div>)
-    }
-
-    // Determine winner
-    const winner = (
-        <div className="status">
-            {declareWinner(closedAll, myScores, numPlayers, playerNames)}
-        </div>
-    );
-    
-    // Undo button
+    const teamNames = setTeamNames(numPlayers, playerNames);
+    const board = generateBoard(numPlayers);
+    const scores = generateScores(numPlayers);
+    const winner = setWinner(closedAll, myScores, numPlayers, playerNames);
     const undoButton = renderUndoButton();
-
-    // New game button
     const newGameButton = renderNewGameButton();
 
-    return(
+    return (
         <div>
             <div>{teamNames}</div>
             <div>{board}</div>
@@ -191,6 +205,13 @@ export default function CricketBoard() {
 }
 
 // ========================================
+
+function getGameId() {
+    const baseUrl = "http://localhost:3000/cricket/";   // change to vercel url later?
+    const fullUrl = window.location.href;
+
+    return fullUrl.replace(baseUrl, "");
+}
 
 function getScores(scores, squares, i, numPlayers) {
     if (numPlayers === 2) {

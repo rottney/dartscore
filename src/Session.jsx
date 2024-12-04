@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-//import CricketBoard from "./CricketBoard.jsx";
-//import ThreeOhOneBoard from "./ThreeOhOneBoard.jsx";
 import { Link } from "react-router-dom";
 
 
 export default function Session( {gameType, numPlayers, playerNames} ) {
-    const [sessionId, setSessionId] = useState("");
+    const [gameId, setGameId] = useState("");
 
 
     async function generateNewSession() { 
@@ -15,7 +13,7 @@ export default function Session( {gameType, numPlayers, playerNames} ) {
             const res = await fetch(url);
             const data = await res.json();
             const id = data["game_id"];
-            setSessionId(id);
+            setGameId(id);
         }
         catch(e) {
             console.error(e);
@@ -23,9 +21,9 @@ export default function Session( {gameType, numPlayers, playerNames} ) {
     }
 
 
-    if (sessionId === "") {
+    if (gameId === "") {
         generateNewSession();
-        
+
         return (
             <div></div>
         );
@@ -33,8 +31,8 @@ export default function Session( {gameType, numPlayers, playerNames} ) {
     else {
         return (
             <div>
-                <p>Share the following link if you would like to play across multiple devices. Click to start:</p>
-                <Link to={`${gameType}/${sessionId}`}>{`http://dartscore.vercel.app/${gameType}/${sessionId}`}</Link>
+                <div>Share the following link if you would like to play across multiple devices.<br/>Click to start:</div>
+                <Link to={`${gameType}/${gameId}`}>{`http://dartscore.vercel.app/${gameType}/${gameId}`}</Link>
             </div>
         );
     }
