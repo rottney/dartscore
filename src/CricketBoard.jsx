@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import Square from "./Square.jsx";
 import "./index.css";
@@ -12,13 +12,20 @@ export default function CricketBoard() {
             const res = await fetch(url);
             const data = await res.json();
             
-            setHistory(history.concat(data["history"]));
+            setHistory(data["history"]);
             setNumPlayers(data["num_players"]);
             setPlayerNames(data["player_names"]);
         }
         catch(e) {
             console.error(e);
         }
+    }
+
+    function getGameId() {
+        const baseUrl = "http://localhost:3000/cricket/";   // change to vercel url later?
+        const fullUrl = window.location.href;
+    
+        return fullUrl.replace(baseUrl, "");
     }
 
     function setTeamNames(numPlayers, playerNames) {
@@ -93,15 +100,12 @@ export default function CricketBoard() {
 
         closedAll[i % numPlayers] = didCloseAll(squares, i, numPlayers);
 
-        // first call backend
-
-        setHistory(
-            history.concat({
-                squares: squares,
-                scores: scores,
-                closed_all: closedAll,
-            })
-        );
+        currentSocket.emit("update_score", {
+            game_id: gameId,
+            squares: squares,
+            scores: scores,
+            closed_all: closedAll,
+        });
     }
 
     function undo() {
@@ -126,10 +130,11 @@ export default function CricketBoard() {
     }
 
     function newGame() {
-        let newGame = window.confirm("Are you sure you want to start a new game?  "
+        const newGame = window.confirm("Are you sure you want to start a new game?  "
             + "Your progress will not be saved.");
-        if (newGame) {
-            window.location.reload();
+
+        if (newGame === true) {
+            window.location = "/";
         }
     }
 
@@ -154,22 +159,41 @@ export default function CricketBoard() {
     }
 
 
-    const gameId = getGameId();
-    const socket = io("http://localhost:5000");
-
-    socket.on("connect", () => {
-        console.log("connected to server");
-        socket.emit("my event", "Hello Server!");
-    });
-
-    socket.on("my response", (data) => {
-        console.log("Message from server", data);
-    });
-    
-
+    const [gameId, setGameId] = useState("");
+    const [currentSocket, setCurrentSocket] = useState(null);
     const [history, setHistory] = useState([]);
     const [numPlayers, setNumPlayers] = useState(0);
     const [playerNames, setPlayerNames] = useState([]);
+
+
+    useEffect(() => {
+        const serverUrl = "http://localhost:5000";
+        const socket = io(serverUrl);
+        setCurrentSocket(socket);
+
+        socket.on("connect", () => {
+            console.log("connected to server"); // change to log file
+
+            const gameId = getGameId();
+            setGameId(gameId);
+
+            const message = `session ${gameId} connected`;
+            socket.emit("log_connection_server", message);
+        });
+
+        socket.on("logConnectionClient", (data) => {
+            console.log("Message from server", data);
+        });
+
+        socket.on("refreshScore", (data) => {
+            setHistory(data);
+        });
+
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
+
 
     if (numPlayers === 0) {
         getInitialStateFromServer(gameId);
@@ -192,6 +216,7 @@ export default function CricketBoard() {
     const undoButton = renderUndoButton();
     const newGameButton = renderNewGameButton();
 
+
     return (
         <div>
             <div>{teamNames}</div>
@@ -205,13 +230,6 @@ export default function CricketBoard() {
 }
 
 // ========================================
-
-function getGameId() {
-    const baseUrl = "http://localhost:3000/cricket/";   // change to vercel url later?
-    const fullUrl = window.location.href;
-
-    return fullUrl.replace(baseUrl, "");
-}
 
 function getScores(scores, squares, i, numPlayers) {
     if (numPlayers === 2) {
